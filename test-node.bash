@@ -235,6 +235,8 @@ fi
 if $blockscout; then
     NODES="$NODES blockscout"
 fi
+
+: '
 if $force_build; then
   echo == Building..
   if $dev_build_nitro; then
@@ -259,6 +261,7 @@ if $force_build; then
   fi
   docker compose build --no-rm $LOCAL_BUILD_NODES
 fi
+'
 
 if $dev_build_nitro; then
   docker tag nitro-node-dev:latest nitro-node-dev-testnode
@@ -321,17 +324,18 @@ if $force_init; then
       docker compose up --wait prysm_beacon_chain
       docker compose up --wait prysm_validator
     else
-      docker compose up --wait geth
+      # docker compose up --wait geth
+      echo == using eth sepolia network...
     fi
 
     echo == Funding validator, sequencer and l2owner
-    docker compose run scripts send-l1 --ethamount 1000 --to validator --wait
-    docker compose run scripts send-l1 --ethamount 1000 --to sequencer --wait
-    docker compose run scripts send-l1 --ethamount 1000 --to l2owner --wait
+    docker compose run scripts send-l1 --ethamount 0.000001 --to validator --wait
+    docker compose run scripts send-l1 --ethamount 0.000001 --to sequencer --wait
+    docker compose run scripts send-l1 --ethamount 0.000001 --to l2owner --wait
 
     echo == create l1 traffic
-    docker compose run scripts send-l1 --ethamount 1000 --to user_l1user --wait
-    docker compose run scripts send-l1 --ethamount 0.0001 --from user_l1user --to user_l1user_b --wait --delay 500 --times 1000000 > /dev/null &
+    docker compose run scripts send-l1 --ethamount 0.000001 --to user_l1user --wait
+    docker compose run scripts send-l1 --ethamount 0.000001 --from user_l1user --to user_l1user_b --wait --delay 500 --times 1000000 > /dev/null &
 
     echo == Writing l2 chain config
     docker compose run scripts write-l2-chain-config
@@ -339,7 +343,8 @@ if $force_init; then
     sequenceraddress=`docker compose run scripts print-address --account sequencer | tail -n 1 | tr -d '\r\n'`
     l2ownerAddress=`docker compose run scripts print-address --account l2owner | tail -n 1 | tr -d '\r\n'`
 
-    docker compose run --entrypoint /usr/local/bin/deploy sequencer --l1conn ws://geth:8546 --l1keystore /home/user/l1keystore --sequencerAddress $sequenceraddress --ownerAddress $l2ownerAddress --l1DeployAccount $l2ownerAddress --l1deployment /config/deployment.json --authorizevalidators 10 --wasmrootpath /home/user/target/machines --l1chainid=$l1chainid --l2chainconfig /config/l2_chain_config.json --l2chainname arb-dev-test --l2chaininfo /config/deployed_chain_info.json
+    echo == $l1chainid
+    docker compose run --entrypoint /usr/local/bin/deploy sequencer --l1conn ws://sepolia.ryoshiresearch.com:8546 --l1keystore /home/user/l1keystore --sequencerAddress $sequenceraddress --ownerAddress $l2ownerAddress --l1DeployAccount $l2ownerAddress --l1deployment /config/deployment.json --authorizevalidators 10 --wasmrootpath /home/user/target/machines --l1chainid=11155111 --l2chainconfig /config/l2_chain_config.json --l2chainname arb-dev-test --l2chaininfo /config/deployed_chain_info.json
     docker compose run --entrypoint sh sequencer -c "jq [.[]] /config/deployed_chain_info.json > /config/l2_chain_info.json"
 
     if $simple; then
@@ -356,35 +361,35 @@ if $force_init; then
 
     echo == Funding l2 funnel and dev key
     docker compose up --wait $INITIAL_SEQ_NODES
-    docker compose run scripts bridge-funds --ethamount 100000 --wait
-    docker compose run scripts bridge-funds --ethamount 1000 --wait --from "key_0x$devprivkey"
+    docker compose run scripts bridge-funds --ethamount 0.000001 --wait
+    docker compose run scripts bridge-funds --ethamount 0.000001 --wait --from "key_0x$devprivkey"
 
     if $tokenbridge; then
         echo == Deploying L1-L2 token bridge
         sleep 10 # no idea why this sleep is needed but without it the deploy fails randomly
         rollupAddress=`docker compose run --entrypoint sh poster -c "jq -r '.[0].rollup.rollup' /config/deployed_chain_info.json | tail -n 1 | tr -d '\r\n'"`
         l2ownerKey=`docker compose run scripts print-private-key --account l2owner | tail -n 1 | tr -d '\r\n'`
-        docker compose run -e ROLLUP_OWNER_KEY=$l2ownerKey -e ROLLUP_ADDRESS=$rollupAddress -e PARENT_KEY=$devprivkey -e PARENT_RPC=http://geth:8545 -e CHILD_KEY=$devprivkey -e CHILD_RPC=http://sequencer:8547 tokenbridge deploy:local:token-bridge
+        docker compose run -e ROLLUP_OWNER_KEY=$l2ownerKey -e ROLLUP_ADDRESS=$rollupAddress -e PARENT_KEY=$devprivkey -e PARENT_RPC=https://sepolia.ryoshiresearch.com -e CHILD_KEY=$devprivkey -e CHILD_RPC=http://sequencer:8547 tokenbridge deploy:local:token-bridge
         docker compose run --entrypoint sh tokenbridge -c "cat network.json && cp network.json l1l2_network.json && cp network.json localNetwork.json"
         echo
     fi
 
     if $l3node; then
         echo == Funding l3 users
-        docker compose run scripts send-l2 --ethamount 1000 --to l3owner --wait
-        docker compose run scripts send-l2 --ethamount 1000 --to l3sequencer --wait
+        docker compose run scripts send-l2 --ethamount 0.000001 --to l3owner --wait
+        docker compose run scripts send-l2 --ethamount 0.000001 --to l3sequencer --wait
 
         echo == Funding l2 deployers
-        docker compose run scripts send-l1 --ethamount 100 --to user_token_bridge_deployer --wait
-        docker compose run scripts send-l2 --ethamount 100 --to user_token_bridge_deployer --wait
+        docker compose run scripts send-l1 --ethamount 0.000001 --to user_token_bridge_deployer --wait
+        docker compose run scripts send-l2 --ethamount 0.000001 --to user_token_bridge_deployer --wait
 
         echo == Funding token deployer
-        docker compose run scripts send-l1 --ethamount 100 --to user_fee_token_deployer --wait
-        docker compose run scripts send-l2 --ethamount 100 --to user_fee_token_deployer --wait
+        docker compose run scripts send-l1 --ethamount 0.000001 --to user_fee_token_deployer --wait
+        docker compose run scripts send-l2 --ethamount 0.000001 --to user_fee_token_deployer --wait
 
         echo == create l2 traffic
-        docker compose run scripts send-l2 --ethamount 100 --to user_traffic_generator --wait
-        docker compose run scripts send-l2 --ethamount 0.0001 --from user_traffic_generator --to user_fee_token_deployer --wait --delay 500 --times 1000000 > /dev/null &
+        docker compose run scripts send-l2 --ethamount 0.000001 --to user_traffic_generator --wait
+        docker compose run scripts send-l2 --ethamount 0.000001 --from user_traffic_generator --to user_fee_token_deployer --wait --delay 500 --times 1000000 > /dev/null &
 
         echo == Writing l3 chain config
         docker compose run scripts write-l3-chain-config
@@ -423,11 +428,11 @@ if $force_init; then
         echo == Fund L3 accounts
         if $l3_custom_fee_token; then
             docker compose run scripts bridge-native-token-to-l3 --amount 50000 --from user_token_bridge_deployer --wait
-            docker compose run scripts send-l3 --ethamount 500 --from user_token_bridge_deployer --wait
-            docker compose run scripts send-l3 --ethamount 500 --from user_token_bridge_deployer --to "key_0x$devprivkey" --wait
+            docker compose run scripts send-l3 --ethamount 0.000001 --from user_token_bridge_deployer --wait
+            docker compose run scripts send-l3 --ethamount 0.000001 --from user_token_bridge_deployer --to "key_0x$devprivkey" --wait
         else
-            docker compose run scripts bridge-to-l3 --ethamount 50000 --wait
-            docker compose run scripts bridge-to-l3 --ethamount 500 --wait --from "key_0x$devprivkey"
+            docker compose run scripts bridge-to-l3 --ethamount 0.000001 --wait
+            docker compose run scripts bridge-to-l3 --ethamount 0.000001 --wait --from "key_0x$devprivkey"
         fi
 
     fi
