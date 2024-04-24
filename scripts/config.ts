@@ -152,6 +152,10 @@ function writeGethGenesisConfig(argv: any) {
 
 function writeConfigs(argv: any) {
     const nodeConfig = {
+        "chain": {
+            "info-json": "[{\"chain-id\":75710361021,\"parent-chain-id\":11155111,\"parent-chain-is-arbitrum\":false,\"chain-name\":\"Domicon Orbit Chain\",\"chain-config\":{\"homesteadBlock\":0,\"daoForkBlock\":null,\"daoForkSupport\":true,\"eip150Block\":0,\"eip150Hash\":\"0x0000000000000000000000000000000000000000000000000000000000000000\",\"eip155Block\":0,\"eip158Block\":0,\"byzantiumBlock\":0,\"constantinopleBlock\":0,\"petersburgBlock\":0,\"istanbulBlock\":0,\"muirGlacierBlock\":0,\"berlinBlock\":0,\"londonBlock\":0,\"clique\":{\"period\":0,\"epoch\":0},\"arbitrum\":{\"EnableArbOS\":true,\"AllowDebugPrecompiles\":false,\"DataAvailabilityCommittee\":true,\"InitialArbOSVersion\":11,\"GenesisBlockNum\":0,\"MaxCodeSize\":24576,\"MaxInitCodeSize\":49152,\"InitialChainOwner\":\"0x25ee6B8f826319ed6Ab37EE658Ef7eABfD25d77C\"},\"chainId\":75710361021},\"rollup\":{\"bridge\":\"0xa80bE8E8144101A8EEf14427c7a91cd0aFFCB11A\",\"inbox\":\"0x72E2593dfC806Cb36cAF5969aD6b1Ebcf3972113\",\"sequencer-inbox\":\"0x3f9e006a9E955eC5434154cd091ABC7752D9f730\",\"rollup\":\"0xCFcAbbe44e66E0EC595Ce786fb4ab3482600e9B0\",\"validator-utils\":\"0xb33Dca7b17c72CFC311D68C543cd4178E0d7ce55\",\"validator-wallet-creator\":\"0x75500812ADC9E51b721BEa31Df322EEc66967DDF\",\"deployed-at\":5766137}}]",
+            "name": "Domicon Orbit Chain"
+        },
         "parent-chain": {
             "connection": {
                 "url": "https://rpc.sepolia.org"
@@ -185,14 +189,14 @@ function writeConfigs(argv: any) {
                 "max-size": 90000,
                 "enable": true,
                 "parent-chain-wallet": {
-                    "private-key": "0b2a4c9df09786c85eb2ba3dbaad1d80f8268308c3d0d1fdede8b8232758fea5"
+                    "private-key": "ccd7971bbef031c46932000dda77243359d217c73bc150f4b84594d753878a69"
                 }
             },
             "staker": {
                 "enable": true,
                 "strategy": "MakeNodes",
                 "parent-chain-wallet": {
-                    "private-key": "119802ea76c84fd24d6c02352943c67832d86026d378d14571a2ffc5c7259e02"
+                    "private-key": "fa58f8005275254f89e1d10c82437eb9059d6957194e9df2ac33de746d684def"
                 }
             },
             "dangerous": {
@@ -200,18 +204,18 @@ function writeConfigs(argv: any) {
             },
             "data-availability": {
                 "enable": true,
-                "sequencer-inbox-address": "0x2d6ec173b84145a079288d6DF7F85Caca78E198D",
+                "sequencer-inbox-address": "0x3f9e006a9E955eC5434154cd091ABC7752D9f730",
                 "parent-chain-node-url": "https://rpc.sepolia.org",
                 "rest-aggregator": {
                     "enable": true,
                     "urls": [
-                        "http://54.242.48.185:9877"
+                        "http://localhost:9877"
                     ]
                 },
                 "rpc-aggregator": {
                     "enable": true,
                     "assumed-honest": 1,
-                    "backends": "[{\"url\":\"http://54.242.48.185:9876\",\"pubkey\":\"YAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==\",\"signermask\":1}]"
+                    "backends": "[{\"url\":\"http://localhost:9876\",\"pubkey\":\"YAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==\",\"signermask\":1}]"
                 }
             }
         },

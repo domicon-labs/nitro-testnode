@@ -341,9 +341,9 @@ if $force_init; then
     sequenceraddress=`docker compose run scripts print-address --account sequencer | tail -n 1 | tr -d '\r\n'`
     l2ownerAddress=`docker compose run scripts print-address --account l2owner | tail -n 1 | tr -d '\r\n'`
 
-    echo == $l1chainid
-    docker compose run --entrypoint /usr/local/bin/deploy sequencer --l1conn ws://sepolia.ryoshiresearch.com:8546 --l1keystore /home/user/l1keystore --sequencerAddress $sequenceraddress --ownerAddress $l2ownerAddress --l1DeployAccount $l2ownerAddress --l1deployment /config/deployment.json --authorizevalidators 10 --wasmrootpath /home/user/target/machines --l1chainid=11155111 --l2chainconfig /config/l2_chain_config.json --l2chainname arb-dev-test --l2chaininfo /config/deployed_chain_info.json
-    docker compose run --entrypoint sh sequencer -c "jq [.[]] /config/deployed_chain_info.json > /config/l2_chain_info.json"
+    #echo == $l1chainid
+    #docker compose run --entrypoint /usr/local/bin/deploy sequencer --l1conn ws://sepolia.ryoshiresearch.com:8546 --l1keystore /home/user/l1keystore --sequencerAddress $sequenceraddress --ownerAddress $l2ownerAddress --l1DeployAccount $l2ownerAddress --l1deployment /config/deployment.json --authorizevalidators 10 --wasmrootpath /home/user/target/machines --l1chainid=11155111 --l2chainconfig /config/l2_chain_config.json --l2chainname arb-dev-test --l2chaininfo /config/deployed_chain_info.json
+    #docker compose run --entrypoint sh sequencer -c "jq [.[]] /config/deployed_chain_info.json > /config/l2_chain_info.json"
 
     if $simple; then
         echo == Writing configs
