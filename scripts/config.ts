@@ -152,10 +152,6 @@ function writeGethGenesisConfig(argv: any) {
 
 function writeConfigs(argv: any) {
     const nodeConfig = {
-        "chain": {
-            "info-json": "[{\"chain-id\":96593121147,\"parent-chain-id\":11155111,\"parent-chain-is-arbitrum\":false,\"chain-name\":\"Domicon Orbit Chain\",\"chain-config\":{\"homesteadBlock\":0,\"daoForkBlock\":null,\"daoForkSupport\":true,\"eip150Block\":0,\"eip150Hash\":\"0x0000000000000000000000000000000000000000000000000000000000000000\",\"eip155Block\":0,\"eip158Block\":0,\"byzantiumBlock\":0,\"constantinopleBlock\":0,\"petersburgBlock\":0,\"istanbulBlock\":0,\"muirGlacierBlock\":0,\"berlinBlock\":0,\"londonBlock\":0,\"clique\":{\"period\":0,\"epoch\":0},\"arbitrum\":{\"EnableArbOS\":true,\"AllowDebugPrecompiles\":false,\"DataAvailabilityCommittee\":true,\"InitialArbOSVersion\":11,\"GenesisBlockNum\":0,\"MaxCodeSize\":24576,\"MaxInitCodeSize\":49152,\"InitialChainOwner\":\"0x87e9d6d209235208Dc3870dE8303e3C5D3672913\"},\"chainId\":96593121147},\"rollup\":{\"bridge\":\"0x9411C8A5308f491e34088492F7f357873e49e884\",\"inbox\":\"0x91E8dBD2dF2b94790da3cEeA10be632686CB06e8\",\"sequencer-inbox\":\"0x2d6ec173b84145a079288d6DF7F85Caca78E198D\",\"rollup\":\"0xBfA0194d82199EFCdF89Df38A75C2aE7d1a3830a\",\"validator-utils\":\"0xb33Dca7b17c72CFC311D68C543cd4178E0d7ce55\",\"validator-wallet-creator\":\"0x75500812ADC9E51b721BEa31Df322EEc66967DDF\",\"deployed-at\":5722049}}]",
-            "name": "Domicon Orbit Chain"
-        },
         "parent-chain": {
             "connection": {
                 "url": "https://rpc.sepolia.org"
@@ -232,6 +228,8 @@ function writeConfigs(argv: any) {
         }
     }
     fs.writeFileSync(path.join(consts.configpath, "node-config.json"), JSON.stringify(nodeConfig))
+
+    fs.copyFileSync("srs", path.join(consts.configpath, "srs"))
 
     const valJwtSecret = path.join(consts.configpath, "val_jwt.hex")
     const chainInfoFile = path.join(consts.configpath, "l2_chain_info.json")

@@ -236,7 +236,6 @@ if $blockscout; then
     NODES="$NODES blockscout"
 fi
 
-: '
 if $force_build; then
   echo == Building..
   if $dev_build_nitro; then
@@ -261,7 +260,6 @@ if $force_build; then
   fi
   docker compose build --no-rm $LOCAL_BUILD_NODES
 fi
-'
 
 if $dev_build_nitro; then
   docker tag nitro-node-dev:latest nitro-node-dev-testnode
@@ -333,9 +331,9 @@ if $force_init; then
     docker compose run scripts send-l1 --ethamount 0.000001 --to sequencer --wait
     docker compose run scripts send-l1 --ethamount 0.000001 --to l2owner --wait
 
-    echo == create l1 traffic
-    docker compose run scripts send-l1 --ethamount 0.000001 --to user_l1user --wait
-    docker compose run scripts send-l1 --ethamount 0.000001 --from user_l1user --to user_l1user_b --wait --delay 500 --times 1000000 > /dev/null &
+    #echo == create l1 traffic
+    #docker compose run scripts send-l1 --ethamount 0.000001 --to user_l1user --wait
+    #docker compose run scripts send-l1 --ethamount 0.000001 --from user_l1user --to user_l1user_b --wait --delay 500 --times 1000000 > /dev/null &
 
     echo == Writing l2 chain config
     docker compose run scripts write-l2-chain-config
